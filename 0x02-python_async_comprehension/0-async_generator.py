@@ -2,10 +2,11 @@
 """This module contains an asyncronous generator"""
 from asyncio import sleep
 from random import uniform
-from typing import AsyncGenerator
+from typing import Generator
 
 
-async def async_generator() -> AsyncGenerator[float, None]:
+# async def async_generator() -> AsyncGenerator[float, None]:
+async def async_generator() -> Generator[float, None, None]:
     """
         This function loops ten times and in each iteration generates random
         floats between 0 and 10 and yields in intervals of one second.
