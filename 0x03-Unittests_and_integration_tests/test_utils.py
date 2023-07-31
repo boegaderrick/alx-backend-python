@@ -2,7 +2,7 @@
 """This module contains a test class"""
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, MagicMock
 
 
@@ -42,3 +42,26 @@ class TestGetJson(unittest.TestCase):
         requests_mock.get.return_value = mock_response
         self.assertEqual(get_json(test_url), test_payload)
         self.assertEqual(requests_mock.get.call_count, 1)
+
+
+class TestMemoize(unittest.TestCase):
+    """utils.memoize test class definition"""
+    def test_memoize(self):
+        class TestClass:
+            """Memoization test class"""
+            def a_method(self):
+                """Returns 42"""
+                return 42
+
+            @memoize
+            def a_property(self):
+                """Calls a_method"""
+                return self.a_method()
+
+        test_object = TestClass()
+
+        with patch.object(test_object, 'a_method') as a_method_mock:
+            a_method_mock.return_value = 42
+            self.assertEqual(test_object.a_property, 42)
+            self.assertEqual(test_object.a_property, 42)
+            self.assertTrue(a_method_mock.assert_called_once)
